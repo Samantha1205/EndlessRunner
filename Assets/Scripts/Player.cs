@@ -8,17 +8,36 @@ public class Player : MonoBehaviour
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Transform raycastOrigin;
     [SerializeField] bool isGrounded;
+    bool jump;
 
     void Update()
+    {
+        CheckForInput();
+    }
+
+    void FixedUpdate()
+    {
+        CheckForGrounded();
+        if (jump == true)
+        {
+            jump = false;
+            rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+        }
+    }
+
+    void CheckForInput()
     {
         if (isGrounded == true)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+                jump = true;
             }
         }
+    }
 
+    void CheckForGrounded()
+    {
         RaycastHit2D hit = Physics2D.Raycast(raycastOrigin.position, Vector2.down);
 
         if (hit.collider != null)
